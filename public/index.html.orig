@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip Slip Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Welcome to the Zip Slip Vulnerability Demo</h1>
+    <p>Upload a zip file below to test safe and unsafe file extractions.</p>
+    <form id="uploadForm">
+        <label for="zipFile">Upload a zip file:</label>
+        <input type="file" id="zipFile" name="zipFile" accept=".zip" required />
+        <button type="submit">Upload and Extract</button>
+    </form>
+    <div id="result"></div>
+    <div>
+        <h2>Extracted Files Directory</h2>
+        <a href="/extracted/" target="_blank">View Extracted Files</a>
+    </div>
+</div>
+
+<script>
+    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        const fileInput = document.getElementById("zipFile");
+        formData.append("zipFile", fileInput.files[0]);
+
+        try {
+            const response = await fetch("/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const result = await response.text();
+            document.getElementById("result").innerHTML = `<pre>${result}</pre>`;
+        } catch (error) {
+            document.getElementById("result").innerHTML = "<p>Error occurred during upload.</p>";
+        }
+    });
+</script>
+</body>
+</html>
